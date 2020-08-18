@@ -75,8 +75,8 @@ export default {
     toCreate() {
       this.$router.push({ path: '/base/gradeAdd' })
     },
-    remove(classId) {
-      remove(classId).then(() => {
+    remove(gradeId) {
+      remove(gradeId).then(() => {
         this.listLoading = false
         this.reload()
       })

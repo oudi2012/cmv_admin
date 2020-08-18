@@ -9,7 +9,7 @@ export function list() {
 
 export function remove(id) {
   return request({
-    url: '/grade/remove?id=' + id,
+    url: '/grade/remove?gradeId=' + id,
     method: 'get'
   })
 }
