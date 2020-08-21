@@ -1,12 +1,12 @@
 <template>
-  <grade-list />
+  <teacher-list />
 </template>
 
 <script>
-import GradeList from './model/gradeList'
+import TeacherList from './model/teacherList'
 
 export default {
-  name: 'ListGrade',
-  components: { GradeList }
+  name: 'ListTeacher',
+  components: { TeacherList }
 }
 </script>

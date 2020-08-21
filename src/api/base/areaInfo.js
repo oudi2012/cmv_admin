@@ -1,5 +1,26 @@
 import request from '@/utils/request'
 
+export function provinceList() {
+  return request({
+    url: '/area/provinces',
+    method: 'get'
+  })
+}
+
+export function cityList(parentId) {
+  return request({
+    url: '/area/cities?provinceId=' + parentId,
+    method: 'get'
+  })
+}
+
+export function townList(parentId) {
+  return request({
+    url: '/area/towns?cityId=' + parentId,
+    method: 'get'
+  })
+}
+
 export function areaList(parentId) {
   return request({
     url: '/area/areaList?parentId=' + parentId,

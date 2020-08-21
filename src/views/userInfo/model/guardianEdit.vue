@@ -1,5 +1,5 @@
 <template>
-  <guardian-detail :is-edit="false" />
+  <guardian-detail :is-edit="true" />
 </template>
 
 <script>

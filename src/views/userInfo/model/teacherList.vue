@@ -14,7 +14,7 @@
     <div class="table">
       <el-table v-loading="listLoading" :data="list" element-loading-text="Loading" border fit highlight-current-row>
         <el-table-column label="编号/电话/日期" width="100">
-          <template class="multi-data" slot-scope="scope">
+          <template slot-scope="scope" class="multi-data">
             <span>{{ scope.row.id }}</span>
             <span>{{ scope.row.phone }}</span>
             <span>{{ scope.row.createTime | dateFormat }}</span>
@@ -24,21 +24,21 @@
           <template slot-scope="scope">{{ scope.row.headImage }}</template>
         </el-table-column>
         <el-table-column label="姓名/登录名/监护人" align="center" width="200">
-          <template class="multi-data" slot-scope="scope">
+          <template slot-scope="scope" class="multi-data">
             <span>{{ scope.row.realName }}</span>
             <span>{{ scope.row.userName }}</span>
             <span>{{ scope.row.guardianId }}</span>
           </template>
         </el-table-column>
         <el-table-column label="注册类型/地区/性别" align="center" width="250">
-          <template class="multi-data" slot-scope="scope">
+          <template slot-scope="scope" class="multi-data">
             <span>{{ scope.row.regType }}</span>
             <span>{{ scope.row.areaId }}</span>
             <span>{{ scope.row.sex }}</span>
           </template>
         </el-table-column>
         <el-table-column label="学校/年级/班级" align="center" width="200">
-          <template class="multi-data" slot-scope="scope">
+          <template slot-scope="scope" class="multi-data">
             <span>{{ scope.row.schoolId }}</span>
             <span>{{ scope.row.gradeId }}</span>
             <span>{{ scope.row.classId }}</span>
@@ -61,7 +61,7 @@ import { list, remove } from '@/api/base/gradeInfo'
 import { formatDate } from '@/utils/date'
 
 export default {
-  name: 'StudentList',
+  name: 'TeacherList',
   filters: {
     dateFormat(time) {
       const date = new Date(time * 1000)

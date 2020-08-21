@@ -13,35 +13,43 @@
     </div>
     <div class="table">
       <el-table v-loading="listLoading" :data="list" element-loading-text="Loading" border fit highlight-current-row>
-        <el-table-column label="编号/电话/日期" width="100">
-          <template class="multi-data" slot-scope="scope">
-            <span>{{ scope.row.id }}</span>
-            <span>{{ scope.row.phone }}</span>
-            <span>{{ scope.row.createTime | dateFormat }}</span>
-          </template>
-        </el-table-column>
-        <el-table-column align="center" label="头像" width="100">
+        <el-table-column align="center" label="头像" width="200">
           <template slot-scope="scope">{{ scope.row.headImage }}</template>
         </el-table-column>
-        <el-table-column label="姓名/登录名/监护人" align="center" width="200">
-          <template class="multi-data" slot-scope="scope">
-            <span>{{ scope.row.realName }}</span>
-            <span>{{ scope.row.userName }}</span>
-            <span>{{ scope.row.guardianId }}</span>
+        <el-table-column label="编号/电话/日期" width="210">
+          <template slot-scope="scope">
+            <div class="multi-data">
+              <span>编号：{{ scope.row.id }}</span>
+              <span>电话：{{ scope.row.phone }}</span>
+              <span>日期：{{ scope.row.regDate | dateFormat }}</span>
+            </div>
+          </template>
+        </el-table-column>
+        <el-table-column label="姓名/登录名/监护人" align="center">
+          <template slot-scope="scope">
+            <div class="multi-data">
+              <span>实姓名：{{ scope.row.realName }}</span>
+              <span>登录名：{{ scope.row.userName }}</span>
+              <span>监护人：{{ scope.row.guardianId }}</span>
+            </div>
           </template>
         </el-table-column>
         <el-table-column label="注册类型/地区/性别" align="center" width="250">
-          <template class="multi-data" slot-scope="scope">
-            <span>{{ scope.row.regType }}</span>
-            <span>{{ scope.row.areaId }}</span>
-            <span>{{ scope.row.sex }}</span>
+          <template slot-scope="scope">
+            <div class="multi-data">
+              <span>类型：{{ scope.row.regType }}</span>
+              <span>地区：{{ scope.row.areaId }}</span>
+              <span>性别：{{ scope.row.sex }}</span>
+            </div>
           </template>
         </el-table-column>
-        <el-table-column label="学校/年级/班级" align="center" width="200">
-          <template class="multi-data" slot-scope="scope">
-            <span>{{ scope.row.schoolId }}</span>
-            <span>{{ scope.row.gradeId }}</span>
-            <span>{{ scope.row.classId }}</span>
+        <el-table-column label="学校/年级/班级" align="center" width="260">
+          <template slot-scope="scope">
+            <div class="multi-data">
+              <span>学校：{{ scope.row.schoolId }}</span>
+              <span>年级：{{ scope.row.gradeId }}</span>
+              <span>班级：{{ scope.row.classId }}</span>
+            </div>
           </template>
         </el-table-column>
         <el-table-column align="center" label="操作" width="200">
@@ -57,13 +65,18 @@
 </template>
 
 <script>
-import { list, remove } from '@/api/base/gradeInfo'
+import { listStudent, removeStudent } from '@/api/base/userInfo'
 import { formatDate } from '@/utils/date'
+import Pagination from '@/components/Pagination'
 
 export default {
   name: 'StudentList',
+  components: { Pagination },
   filters: {
     dateFormat(time) {
+      if (!time) {
+        return ''
+      }
       const date = new Date(time * 1000)
       return formatDate(date, 'yyyy-MM-dd hh:mm:ss')
     }
@@ -93,7 +106,7 @@ export default {
     },
     fetchData() {
       this.listLoading = true
-      list().then(response => {
+      listStudent(this.listQuery).then(response => {
         this.list = response.data.list
         this.total = response.data.total
         this.listLoading = false
@@ -102,11 +115,14 @@ export default {
     toCreate() {
       this.$router.push({ path: '/user/studentAdd' })
     },
-    toEdit() {
-      this.$router.push({ path: '/user/studentAdd' })
+    toEdit(id) {
+      this.$router.push({ path: '/user/studentEdit/' + id })
     },
-    remove(gradeId) {
-      remove(gradeId).then(() => {
+    remove(id) {
+      const idVo = {
+        id: id
+      }
+      removeStudent(idVo).then(() => {
         this.listLoading = false
         this.reload()
       })
@@ -125,11 +141,12 @@ export default {
   .table {
     margin-top: 20px;
   }
-  .multi-data > span{
+  .multi-data>span{
     width: 100%;
     height: 30px;
     padding: 5px;
     text-align: left;
-    border: 1px solid #1f2d3d;
+    float: left;
+    border-bottom: 1px solid #cccccc;
   }
 </style>

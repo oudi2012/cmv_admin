@@ -1,12 +1,12 @@
 <template>
-  <grade-list />
+  <guardian-list />
 </template>
 
 <script>
-import GradeList from './model/gradeList'
+import GuardianList from './model/guardianList'
 
 export default {
-  name: 'ListGrade',
-  components: { GradeList }
+  name: 'ListGuardian',
+  components: { GuardianList }
 }
 </script>

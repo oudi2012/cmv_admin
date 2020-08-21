@@ -1,12 +1,12 @@
 <template>
-  <student-detail :is-edit="false" />
+  <student-detail :is-edit="true" />
 </template>
 
 <script>
 import StudentDetail from './studentDetail'
 
 export default {
-  name: 'AddForm',
+  name: 'EditForm',
   components: { StudentDetail }
 }
 </script>
