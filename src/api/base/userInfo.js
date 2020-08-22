@@ -84,3 +84,42 @@ export function removeGuardian(data) {
     data
   })
 }
+
+export function listTeacher(data) {
+  return request({
+    url: '/teacher/list',
+    method: 'get',
+    params: data
+  })
+}
+
+export function findTeacher(id) {
+  return request({
+    url: '/teacher/findById?id=' + id,
+    method: 'get'
+  })
+}
+
+export function createTeacher(data) {
+  return request({
+    url: '/teacher/create',
+    method: 'post',
+    data
+  })
+}
+
+export function editTeacher(data) {
+  return request({
+    url: '/teacher/edit',
+    method: 'post',
+    data
+  })
+}
+
+export function removeTeacher(data) {
+  return request({
+    url: '/teacher/remove',
+    method: 'post',
+    data
+  })
+}

@@ -13,41 +13,31 @@
     </div>
     <div class="table">
       <el-table v-loading="listLoading" :data="list" element-loading-text="Loading" border fit highlight-current-row>
-        <el-table-column label="编号/电话/日期" width="100">
-          <template slot-scope="scope" class="multi-data">
-            <span>{{ scope.row.id }}</span>
-            <span>{{ scope.row.phone }}</span>
-            <span>{{ scope.row.createTime | dateFormat }}</span>
-          </template>
-        </el-table-column>
-        <el-table-column align="center" label="头像" width="100">
+        <el-table-column align="center" label="头像" width="200">
           <template slot-scope="scope">{{ scope.row.headImage }}</template>
         </el-table-column>
-        <el-table-column label="姓名/登录名/监护人" align="center" width="200">
-          <template slot-scope="scope" class="multi-data">
-            <span>{{ scope.row.realName }}</span>
-            <span>{{ scope.row.userName }}</span>
-            <span>{{ scope.row.guardianId }}</span>
+        <el-table-column label="名称/简称/地址">
+          <template slot-scope="scope">
+            <div class="multi-data">
+              <span>名称：{{ scope.row.name }}</span>
+              <span>简称：{{ scope.row.shortName }}</span>
+              <span>地址：{{ scope.row.address }}</span>
+            </div>
           </template>
         </el-table-column>
-        <el-table-column label="注册类型/地区/性别" align="center" width="250">
-          <template slot-scope="scope" class="multi-data">
-            <span>{{ scope.row.regType }}</span>
-            <span>{{ scope.row.areaId }}</span>
-            <span>{{ scope.row.sex }}</span>
-          </template>
-        </el-table-column>
-        <el-table-column label="学校/年级/班级" align="center" width="200">
-          <template slot-scope="scope" class="multi-data">
-            <span>{{ scope.row.schoolId }}</span>
-            <span>{{ scope.row.gradeId }}</span>
-            <span>{{ scope.row.classId }}</span>
+        <el-table-column label="拼音/重点/时间" align="center" width="300">
+          <template slot-scope="scope">
+            <div class="multi-data">
+              <span>拼音：{{ scope.row.pinyin }}</span>
+              <span>重点：{{ scope.row.weight | weightFormat }}</span>
+              <span>时间：{{ scope.row.createDate | dateFormat }}</span>
+            </div>
           </template>
         </el-table-column>
         <el-table-column align="center" label="操作" width="200">
           <template slot-scope="scope">
-            <el-button size="mini" type="success" @click="toEdit(scope.row.id)">编辑</el-button>
-            <el-button size="mini" type="danger" @click="remove(scope.row.id)">删除</el-button>
+            <el-button size="mini" type="success" @click="toEdit(scope.row.schoolId)">编辑</el-button>
+            <el-button size="mini" type="danger" @click="remove(scope.row.schoolId)">删除</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -57,17 +47,24 @@
 </template>
 
 <script>
-import { list, remove } from '@/api/base/gradeInfo'
+import { pageList, remove } from '@/api/school/schoolInfo'
 import { formatDate } from '@/utils/date'
-import Pagination from '@/components/Pagination'
+import Pagination from '@/components/Pagination/index'
 
 export default {
-  name: 'TeacherList',
+  name: 'SchoolList',
   components: { Pagination },
   filters: {
     dateFormat(time) {
       const date = new Date(time * 1000)
       return formatDate(date, 'yyyy-MM-dd hh:mm:ss')
+    },
+    weightFormat(weight) {
+      if (weight === '1') {
+        return '是'
+      } else {
+        return '否'
+      }
     }
   },
   data() {
@@ -95,20 +92,23 @@ export default {
     },
     fetchData() {
       this.listLoading = true
-      list().then(response => {
+      pageList(this.listQuery).then(response => {
         this.list = response.data.list
         this.total = response.data.total
         this.listLoading = false
       })
     },
     toCreate() {
-      this.$router.push({ path: '/user/studentAdd' })
+      this.$router.push({ path: '/school/schoolAdd' })
     },
-    toEdit() {
-      this.$router.push({ path: '/user/studentAdd' })
+    toEdit(schoolId) {
+      this.$router.push({ path: '/school/schoolEdit/' + schoolId })
     },
-    remove(gradeId) {
-      remove(gradeId).then(() => {
+    remove(schoolId) {
+      const idVo = {
+        id: schoolId
+      }
+      remove(idVo).then(() => {
         this.listLoading = false
         this.reload()
       })
@@ -132,6 +132,7 @@ export default {
     height: 30px;
     padding: 5px;
     text-align: left;
-    border: 1px solid #1f2d3d;
+    float: left;
+    border-bottom: 1px solid #cccccc;
   }
 </style>
