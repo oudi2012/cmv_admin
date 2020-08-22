@@ -97,11 +97,10 @@ export default {
   },
   methods: {
     handleProvinceChange() {
-      this.getCityList(this.postForm.province)
-      this.getTownList(this.postForm.city)
+      this.getCityList()
     },
     handleCityChange() {
-      this.getTownList(this.postForm.city)
+      this.getTownList()
     },
     getProvinceList() {
       provinceList().then(res => {

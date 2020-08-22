@@ -113,11 +113,10 @@ export default {
       })
     },
     handleProvinceChange() {
-      this.getCityList(this.postForm.province)
-      this.getTownList(this.postForm.city)
+      this.getCityList()
     },
     handleCityChange() {
-      this.getTownList(this.postForm.city)
+      this.getTownList()
     },
     getProvinceList() {
       provinceList().then(res => {
@@ -130,6 +129,7 @@ export default {
       cityList(this.postForm.province).then(res => {
         this.postForm.cityList = res.data
         this.postForm.city = this.postForm.cityList[0].areaCode
+        this.getTownList()
       })
     },
     getTownList() {

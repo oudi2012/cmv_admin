@@ -13,35 +13,34 @@
     </div>
     <div class="table">
       <el-table v-loading="listLoading" :data="list" element-loading-text="Loading" border fit highlight-current-row>
-        <el-table-column label="编号/电话/日期" width="100">
-          <template slot-scope="scope" class="multi-data">
-            <span>{{ scope.row.id }}</span>
-            <span>{{ scope.row.phone }}</span>
-            <span>{{ scope.row.createTime | dateFormat }}</span>
-          </template>
-        </el-table-column>
         <el-table-column align="center" label="头像" width="100">
           <template slot-scope="scope">{{ scope.row.headImage }}</template>
         </el-table-column>
-        <el-table-column label="姓名/登录名/监护人" align="center" width="200">
-          <template slot-scope="scope" class="multi-data">
-            <span>{{ scope.row.realName }}</span>
-            <span>{{ scope.row.userName }}</span>
-            <span>{{ scope.row.guardianId }}</span>
+        <el-table-column label="编号/电话/日期" width="200">
+          <template slot-scope="scope">
+            <div class="multi-data">
+              <span>编号: {{ scope.row.id }}</span>
+              <span>电话: {{ scope.row.phone }}</span>
+              <span>日期: {{ scope.row.regDate | dateFormat }}</span>
+            </div>
           </template>
         </el-table-column>
-        <el-table-column label="注册类型/地区/性别" align="center" width="250">
-          <template slot-scope="scope" class="multi-data">
-            <span>{{ scope.row.regType }}</span>
-            <span>{{ scope.row.areaId }}</span>
-            <span>{{ scope.row.sex }}</span>
+        <el-table-column label="姓名/登录名/注册类型" align="center">
+          <template slot-scope="scope">
+            <div class="multi-data">
+              <span>姓    名: {{ scope.row.realName }}</span>
+              <span>登 录 名: {{ scope.row.userName }}</span>
+              <span>注册类型: {{ scope.row.regType }}</span>
+            </div>
           </template>
         </el-table-column>
         <el-table-column label="学校/年级/班级" align="center" width="200">
-          <template slot-scope="scope" class="multi-data">
-            <span>{{ scope.row.schoolId }}</span>
-            <span>{{ scope.row.gradeId }}</span>
-            <span>{{ scope.row.classId }}</span>
+          <template slot-scope="scope">
+            <div class="multi-data">
+              <span>{{ scope.row.schoolName }}</span>
+              <span>{{ scope.row.areaId }}</span>
+              <span>{{ scope.row.sex }}</span>
+            </div>
           </template>
         </el-table-column>
         <el-table-column align="center" label="操作" width="200">
@@ -57,7 +56,7 @@
 </template>
 
 <script>
-import { list, remove } from '@/api/base/gradeInfo'
+import { listTeacher, removeTeacher } from '@/api/base/userInfo'
 import { formatDate } from '@/utils/date'
 import Pagination from '@/components/Pagination'
 
@@ -95,20 +94,23 @@ export default {
     },
     fetchData() {
       this.listLoading = true
-      list().then(response => {
+      listTeacher(this.listQuery).then(response => {
         this.list = response.data.list
         this.total = response.data.total
         this.listLoading = false
       })
     },
     toCreate() {
-      this.$router.push({ path: '/user/studentAdd' })
+      this.$router.push({ path: '/user/teacherAdd' })
     },
-    toEdit() {
-      this.$router.push({ path: '/user/studentAdd' })
+    toEdit(id) {
+      this.$router.push({ path: '/user/teacherEdit/' + id })
     },
-    remove(gradeId) {
-      remove(gradeId).then(() => {
+    remove(id) {
+      const idVo = {
+        id: id
+      }
+      removeTeacher(idVo).then(() => {
         this.listLoading = false
         this.reload()
       })
@@ -127,11 +129,12 @@ export default {
   .table {
     margin-top: 20px;
   }
-  .multi-data > span{
+  .multi-data>span{
     width: 100%;
     height: 30px;
     padding: 5px;
     text-align: left;
-    border: 1px solid #1f2d3d;
+    float: left;
+    border-bottom: 1px solid #cccccc;
   }
 </style>

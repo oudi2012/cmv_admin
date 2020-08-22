@@ -1,12 +1,12 @@
 <template>
-  <area-detail :is-edit="true" />
+  <teacher-detail :is-edit="true" />
 </template>
 
 <script>
-import AreaDetail from './studentDetail'
+import TeacherDetail from './teacherDetail'
 
 export default {
   name: 'EditForm',
-  components: { AreaDetail }
+  components: { TeacherDetail }
 }
 </script>

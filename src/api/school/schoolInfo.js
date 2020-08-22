@@ -8,9 +8,9 @@ export function pageList(data) {
   })
 }
 
-export function listByParam(data) {
+export function listKv(data) {
   return request({
-    url: '/school/listByParam',
+    url: '/school/listKv',
     method: 'get',
     params: data
   })
