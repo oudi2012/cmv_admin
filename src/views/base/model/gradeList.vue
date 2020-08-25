@@ -34,7 +34,7 @@
 </template>
 
 <script>
-import { list, remove } from '@/api/base/gradeInfo'
+import { listGrade, removeGrade } from '@/api/base/gradeInfo'
 import { formatDate } from '@/utils/date'
 
 export default {
@@ -67,7 +67,7 @@ export default {
     },
     fetchData() {
       this.listLoading = true
-      list().then(response => {
+      listGrade().then(response => {
         this.list = response.data
         this.listLoading = false
       })
@@ -76,7 +76,7 @@ export default {
       this.$router.push({ path: '/base/gradeAdd' })
     },
     remove(gradeId) {
-      remove(gradeId).then(() => {
+      removeGrade(gradeId).then(() => {
         this.listLoading = false
         this.reload()
       })

@@ -13,31 +13,19 @@
     </div>
     <div class="table">
       <el-table v-loading="listLoading" :data="list" element-loading-text="Loading" border fit highlight-current-row>
-        <el-table-column align="center" label="头像" width="200">
-          <template slot-scope="scope">{{ scope.row.headImage }}</template>
+        <el-table-column label="编号" width="100">
+          <template slot-scope="scope">{{ scope.row.verId }}</template>
         </el-table-column>
-        <el-table-column label="名称/简称/地址">
-          <template slot-scope="scope">
-            <div class="multi-data">
-              <span>名称：{{ scope.row.name }}</span>
-              <span>简称：{{ scope.row.shortName }}</span>
-              <span>地址：{{ scope.row.address }}</span>
-            </div>
-          </template>
+        <el-table-column label="名称">
+          <template slot-scope="scope">{{ scope.row.name }}</template>
         </el-table-column>
-        <el-table-column label="拼音/重点/时间" align="center" width="300">
-          <template slot-scope="scope">
-            <div class="multi-data">
-              <span>拼音：{{ scope.row.pinyin }}</span>
-              <span>重点：{{ scope.row.weight | weightFormat }}</span>
-              <span>时间：{{ scope.row.createDate | dateFormat }}</span>
-            </div>
-          </template>
+        <el-table-column label="排序">
+          <template slot-scope="scope">{{ scope.row.orderNo }}</template>
         </el-table-column>
         <el-table-column align="center" label="操作" width="200">
           <template slot-scope="scope">
-            <el-button size="mini" type="success" @click="toEdit(scope.row.schoolId)">编辑</el-button>
-            <el-button size="mini" type="danger" @click="remove(scope.row.schoolId)">删除</el-button>
+            <el-button size="mini" type="success" @click="toEdit(scope.row.verId)">编辑</el-button>
+            <el-button size="mini" type="danger" @click="remove(scope.row.verId)">删除</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -47,31 +35,17 @@
 </template>
 
 <script>
-import { pageList, remove } from '@/api/school/schoolInfo'
-import { formatDate } from '@/utils/date'
+import { pageVersion, removeVersion } from '@/api/book/versionType'
 import Pagination from '@/components/Pagination/index'
 
 export default {
-  name: 'SchoolList',
+  name: 'VersionList',
   components: { Pagination },
-  filters: {
-    dateFormat(time) {
-      const date = new Date(time * 1000)
-      return formatDate(date, 'yyyy-MM-dd hh:mm:ss')
-    },
-    weightFormat(weight) {
-      if (weight === '1') {
-        return '是'
-      } else {
-        return '否'
-      }
-    }
-  },
   data() {
     return {
       list: [],
-      listLoading: true,
       total: 0,
+      listLoading: true,
       listQuery: {
         name: '',
         pageIndex: 1,
@@ -92,23 +66,23 @@ export default {
     },
     fetchData() {
       this.listLoading = true
-      pageList(this.listQuery).then(response => {
+      pageVersion(this.listQuery).then(response => {
         this.list = response.data.list
         this.total = response.data.total
         this.listLoading = false
       })
     },
     toCreate() {
-      this.$router.push({ path: '/school/schoolAdd' })
+      this.$router.push({ path: '/book/versionAdd' })
     },
-    toEdit(schoolId) {
-      this.$router.push({ path: '/school/schoolEdit/' + schoolId })
+    toEdit(id) {
+      this.$router.push({ path: '/book/versionEdit/' + id })
     },
-    remove(schoolId) {
+    remove(id) {
       const idVo = {
-        id: schoolId
+        id: id
       }
-      remove(idVo).then(() => {
+      removeVersion(idVo).then(() => {
         this.listLoading = false
         this.reload()
       })

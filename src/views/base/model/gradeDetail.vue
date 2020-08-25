@@ -13,7 +13,7 @@
 </template>
 
 <script>
-import { create } from '@/api/base/gradeInfo'
+import { createGrade } from '@/api/base/gradeInfo'
 
 export default {
   name: 'GradeDetail',
@@ -32,11 +32,11 @@ export default {
   methods: {
     create() {
       this.listLoading = true
-      const classInfo = {
+      const gradeInfo = {
         name: this.postForm.name,
         type: 0
       }
-      create(classInfo).then(response => {
+      createGrade(gradeInfo).then(response => {
         this.listLoading = false
         this.$message.success('操作成功!')
         this.$router.push({ path: '/base/gradeList' })
