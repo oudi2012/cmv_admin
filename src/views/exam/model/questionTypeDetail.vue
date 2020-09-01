@@ -2,7 +2,10 @@
   <div class="app-container">
     <el-form ref="formDetail" class="form-inline" :model="postForm" label-width="100px" label-position="left">
       <el-form-item label="名称：">
-        <el-input v-model="postForm.name" maxlength="50" />
+        <el-input v-model="postForm.title" maxlength="50" />
+      </el-form-item>
+      <el-form-item label="排序：">
+        <el-input v-model="postForm.orderNo" />
       </el-form-item>
       <el-form-item>
         <el-button type="primary" @click="editItem">确定</el-button>
@@ -13,7 +16,7 @@
 </template>
 
 <script>
-import { createVersion, editVersion, findVersion } from '@/api/book/versionType'
+import { createQuestionType, findQuestionType, editQuestionType } from '@/api/exam/questionTypeInfo'
 
 export default {
   name: 'Detail',
@@ -22,41 +25,42 @@ export default {
       pathList: [],
       listLoading: false,
       postForm: {
-        verId: this.$route.params.id,
-        name: '',
-        orderNo: 1
+        id: this.$route.params.id,
+        title: '',
+        orderNo: ''
       }
     }
   },
   created() {
-    if (this.postForm.verId) {
+    if (this.postForm.id) {
       this.findItem()
     }
   },
   methods: {
     findItem() {
-      findVersion(this.postForm.verId).then(res => {
-        this.postForm.name = res.data.name
+      findQuestionType(this.postForm.id).then(res => {
+        this.postForm.title = res.data.title
+        this.postForm.orderNo = res.data.orderNo
       })
     },
     editItem() {
       this.listLoading = true
-      if (!this.postForm.verId) {
-        createVersion(this.postForm).then(() => {
+      if (!this.postForm.id) {
+        createQuestionType(this.postForm).then(() => {
           this.listLoading = false
           this.$message.success('操作成功!')
-          this.$router.push({ path: '/book/versionList' })
+          this.$router.push({ path: '/exam/questionTypeList' })
         })
       } else {
-        editVersion(this.postForm).then(() => {
+        editQuestionType(this.postForm).then(() => {
           this.listLoading = false
           this.$message.success('操作成功!')
-          this.$router.push({ path: '/book/versionList' })
+          this.$router.push({ path: '/exam/questionTypeList' })
         })
       }
     },
     console() {
-      this.$router.push({ path: '/book/versionList' })
+      this.$router.push({ path: '/exam/questionTypeList' })
     }
   }
 }
@@ -64,13 +68,9 @@ export default {
 
 <style scoped lang="scss">
   .form-inline{
-    width: 50%;
+    width: 80%;
     .el-input {
       width:80%;
-    }
-    .el-select{
-      width:30%;
-      margin-right: 10px;
     }
   }
 </style>
