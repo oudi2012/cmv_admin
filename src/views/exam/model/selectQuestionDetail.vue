@@ -19,14 +19,15 @@
           <span v-if="resultInfo.qusType === 1">
             <el-radio-group v-model="resultInfo.selectItem" @change="getAnswers">
               <el-radio v-for="item in resultInfo.optionList" :key="item.key" :label="item.key">{{ item.key }} : {{ item.option }}
-                <p class="el-icon-edit"></p>
+                <a class="el-icon-close" @click="removeOptionItem(item.key)" />
               </el-radio>
             </el-radio-group>
           </span>
           <span v-else>
             <el-checkbox-group v-model="resultInfo.selectItem">
-              <el-checkbox v-for="item in resultInfo.optionList" :key="item.key" :label="item.key">{{ item.key }} : {{ item.option }}</el-checkbox>
-              <p class="el-icon-edit"></p>
+              <el-checkbox v-for="item in resultInfo.optionList" :key="item.key" :label="item.key">{{ item.key }} : {{ item.option }}
+                <a class="el-icon-close" @click="removeOptionItem(item.key)" />
+              </el-checkbox>
             </el-checkbox-group>
           </span>
         </el-col>
@@ -199,7 +200,7 @@ export default {
       })
     },
     setOptionItemName() {
-      this.resultInfo.optionList.find(item => {
+      this.resultInfo.optionList.forEach((item) => {
         if (item.key === this.resultInfo.selectItem) {
           this.postForm.itemName = item.option
         }
@@ -215,6 +216,22 @@ export default {
     },
     getAnswers() {
       this.resultInfo.answers = this.resultInfo.selectItem
+    },
+    removeOptionItem(key) {
+      let idx = 0
+      const arrOptList = []
+      this.resultInfo.optionList.forEach((item) => {
+        if (item.key !== key) {
+          idx = idx + 1
+          const optionItem = {
+            key: getChar(idx),
+            option: item.option
+          }
+          arrOptList.push(optionItem)
+        }
+      })
+      this.resultInfo.optionList = []
+      this.resultInfo.optionList = arrOptList
     },
     editQuestion() {
       this.listLoading = true
@@ -261,6 +278,12 @@ export default {
 <style scoped lang="scss">
   .app-container {
     border: 1px solid #EBEEF5;
+  }
+  .el-icon-close {
+    font-size: 16px;
+  }
+  .el-icon-close:hover {
+    color: orangered;
   }
   .form-inline{
     width: 80%;
