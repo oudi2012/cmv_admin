@@ -24,7 +24,8 @@ module.exports = {
     },
     proxy: {
       '/api': {
-        target: 'http://192.168.41.90',
+        //http://139.159.207.216/
+        target: 'http://localhost/',
         ws: true,
         chageOrigin: true,
         pathRewrite: {
