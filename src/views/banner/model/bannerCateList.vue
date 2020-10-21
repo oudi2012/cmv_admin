@@ -22,13 +22,11 @@
         <el-table-column label="名称" align="center">
           <template slot-scope="scope">{{ scope.row.codeTitle }}</template>
         </el-table-column>
-        <el-table-column label="添加用户" align="center">
+        <el-table-column label="添加用户" align="center" width="200">
           <template slot-scope="scope">{{ scope.row.userName }}</template>
         </el-table-column>
         <el-table-column label="时间" align="center" width="200">
-          <template slot-scope="scope">
-            <span>时间：{{ scope.row.createDate | dateFormat }}</span>
-          </template>
+          <template slot-scope="scope">{{ scope.row.createDate | dateFormat }}</template>
         </el-table-column>
         <el-table-column align="center" label="操作" width="200">
           <template slot-scope="scope">

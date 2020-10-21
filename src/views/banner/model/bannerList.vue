@@ -40,7 +40,7 @@
           <template slot-scope="scope">
             <div class="multi-data">
               <span>展示位置：{{ scope.row.targetName }}</span>
-              <span>状态：{{ scope.row.state }}</span>
+              <span>状态：{{ scope.row.stateName }}</span>
             </div>
           </template>
         </el-table-column>
@@ -90,6 +90,11 @@ export default {
       subjectList: [],
       gradeId: 0,
       gradeList: [],
+      stateName: '',
+      targetName: '',
+      cateName: '',
+      cntTypeName: '',
+      createDate: '',
       listQuery: {
         title: '',
         pageIndex: 1,

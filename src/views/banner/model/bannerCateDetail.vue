@@ -44,6 +44,7 @@ export default {
     },
     editItem() {
       this.listLoading = true
+      console.log(this.postForm.id)
       if (!this.postForm.id) {
         bannerCateCreate(this.postForm).then(() => {
           this.listLoading = false

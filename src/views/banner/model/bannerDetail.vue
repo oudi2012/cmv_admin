@@ -26,18 +26,17 @@
         <el-upload
           ref="upload"
           class="el-upload"
-          action="/image/upload"
+          action="/api/image/upload"
           :accept="acceptFileType"
           :limit="1"
-          :on-exceed="handleImage"
+          :headers="token"
           :before-upload="beforeUpload"
-          :on-preview="handlePreview"
-          :on-remove="handleRemove"
-          :file-list="fileList"
-          :auto-upload="false"
+          :on-success="handleSuccess"
+          :auto-upload="true"
         >
-          <el-button slot="trigger" size="small" type="primary">浏览</el-button>
-          <div slot="tip" class="el-upload__tip">只能上传图片，且不超过1M</div>
+          <img :src="postForm.srcUrl" class="image" alt="">
+          <el-button slot="trigger" size="small" type="primary" style="margin-left: 20px">浏览</el-button>
+          <div slot="tip" class="el-upload__tip" style="width: 300px">只能上传图片，且不超过1M</div>
         </el-upload>
       </el-form-item>
       <el-form-item>
@@ -51,6 +50,7 @@
 <script>
 import { bannerCatePageList } from '@/api/banner/bannerCate'
 import { bannerInfoFindById, bannerInfoCreate, bannerInfoUpdate } from '@/api/banner/bannerInfo'
+import { getToken } from '@/utils/auth'
 
 const cntTypeList = [
   { code: 'pic', title: '图片' },
@@ -63,23 +63,27 @@ const targetList = [
   { code: 'app', title: 'app' }
 ]
 
+const token = getToken()
+
 export default {
   name: 'Detail',
   data() {
     return {
+      token: { token: token },
       cateList: [],
       codeTitle: '',
       upLoading: false,
       cntTypeList: cntTypeList,
       targetList: targetList,
-      acceptFileType: '.jgp',
-      fileList: [],
+      acceptFileType: 'image/jpg,image/jpeg,image/gif,image/png',
       postForm: {
         id: this.$route.params.id,
         cateCode: '',
         cntType: 'pic',
-        coverImage: '',
-        target: 'all'
+        title: '',
+        srcUrl: '',
+        target: 'all',
+        orderNo: 0
       }
     }
   },
@@ -90,18 +94,13 @@ export default {
     }
   },
   methods: {
-    handleImage(files, fileList) {
-      this.$refs.upload.clearFiles()
-    },
-    handleRemove(file, fileList) {
-      console.log(file)
-    },
-    handlePreview(file) {
-      console.log(file)
+    handleSuccess(res) {
+      console.log(res.data)
+      this.postForm.srcUrl = res.data
     },
     beforeUpload(file) {
       const fileName = file.name.substring(file.name.lastIndexOf('.') + 1)
-      if (fileName !== 'jpg') {
+      if (this.acceptFileType.indexOf(fileName) < 0) {
         this.$message({
           type: 'error',
           showClose: true,
@@ -111,7 +110,6 @@ export default {
         return false
       }
       const fileSize = file.size
-      console.log(fileSize)
       if (fileSize > 1048576) {
         this.$message({
           type: 'error',
@@ -121,6 +119,7 @@ export default {
         })
         return false
       }
+      return true
     },
     getBannerCateList() {
       const cateItem = {
@@ -128,55 +127,36 @@ export default {
         pageSize: 50
       }
       bannerCatePageList(cateItem).then(res => {
-        this.cateList = res.data
+        this.cateList = res.data.list
         this.postForm.cateCode = this.cateList[0].cateCode
       })
     },
     findItem() {
-      bannerInfoFindById(this.postForm.name, this.postForm.id).then(res => {
-        this.postForm.bookName = res.data.bookName
-        this.postForm.shortName = res.data.shortName
-        this.postForm.verId = res.data.verId
-        this.postForm.theYear = res.data.theYear
-        this.postForm.coverImage = res.data.coverImage
-        this.postForm.cipImage = res.data.cipImage
-        this.postForm.volume = res.data.volume
-        this.postForm.elective = res.data.elective
-        this.postForm.gradeId = res.data.gradeId
+      bannerInfoFindById(this.postForm.id).then(res => {
+        this.postForm.cateCode = res.data.cateCode
+        this.postForm.cntType = res.data.cntType
+        this.postForm.title = res.data.title
+        this.postForm.srcUrl = res.data.srcUrl
       })
     },
     editItem() {
       this.listLoading = true
-      const bookInfo = {
-        bookId: this.postForm.id,
-        bookName: this.postForm.bookName,
-        shortName: this.postForm.shortName,
-        version: this.postForm.verId,
-        theYear: this.postForm.theYear,
-        coverImage: this.postForm.coverImage,
-        cipImage: this.postForm.cipImage,
-        volume: this.postForm.volume,
-        elective: this.postForm.elective,
-        subjectId: this.postForm.subjectId,
-        gradeId: this.postForm.gradeId
-      }
       if (!this.postForm.id) {
-        console.log(bookInfo)
-        bannerInfoCreate(bookInfo).then(() => {
+        bannerInfoCreate(this.postForm).then(() => {
           this.listLoading = false
           this.$message.success('操作成功!')
-          this.$router.push({ path: '/book/bookList' })
+          this.$router.push({ path: '/content/bannerInfoList' })
         })
       } else {
-        bannerInfoUpdate(bookInfo).then(() => {
+        bannerInfoUpdate(this.postForm).then(() => {
           this.listLoading = false
           this.$message.success('操作成功!')
-          this.$router.push({ path: '/book/bookList' })
+          this.$router.push({ path: '/content/bannerInfoList' })
         })
       }
     },
     console() {
-      this.$router.push({ path: '/book/bookList' })
+      this.$router.push({ path: '/content/bannerInfoList' })
     }
   }
 }
@@ -184,13 +164,20 @@ export default {
 
 <style scoped lang="scss">
   .form-inline{
-    width: 30%;
+    width: 50%;
     .el-input {
-      width:80%;
+      width:50%;
     }
     .el-select{
-      width:80%;
+      width:50%;
       margin-right: 10px;
     }
+  }
+  .image{
+    float: left;
+    width: 300px;
+    min-height: 100px;
+    max-height: 300px;
+    border: 1px rgba(140, 147, 157, 0.58) dashed;
   }
 </style>
